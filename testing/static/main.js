@@ -16,15 +16,29 @@ class liveUpdateError extends Error{
       this.name = 'liveUpdateError'
   }
 }
+
 const request = function(url,method,headers){
   method = method.toUpperCase()
-  if(method == "POST"){
-      var request = new XMLHttpRequest()
+  var request = new XMLHttpRequest()
+  for(i=0;i<headers.length;i++){
+    try{
+      header = headers[i]
+      request.setRequestHeader(header[0],header[1])
+    } catch(err){
+      try{
+        throw new liveUpdateError(`Invalid header, "${header}"`)
+    } catch(error){
+        console.error(`liveUpdate || ${err.name}, ${err.message}`)
+    }
+    }
+    
+  }
+  if(method == "POST"){ 
       request.open("POST",url,false)
   }else if (method == "GET"){
-      var request = new XMLHttpRequest()
       request.open("GET",url,false)
   }
+  
   request.send(null)
   this.response = request.responseText
   this.json = request.responseXML
@@ -70,7 +84,7 @@ const liveUpdate = function(target,url){
                   try{
                       throw new liveUpdateError("Replacer not found in index.")
                   } catch(error){
-                      console.log(`liveUpdate || ${err.name}, ${err.message}`)
+                      console.error(`liveUpdate || ${err.name}, ${err.message}`)
                   }
               }else{
                   var starterList = document.getElementById(target).innerText.split(' ')
@@ -130,10 +144,9 @@ const liveUpdate = function(target,url){
                   try{
                       throw new liveUpdateError("Replacer not found in index.")
                   } catch(error){
-                      console.log(`liveUpdate || ${err.name}, ${err.message}`)
+                      console.error(`liveUpdate || ${err.name}, ${err.message}`)
                   }
               }else{
-                  console.log('through')
                   var starterList = document.getElementById(target).innerText.split(' ')
                   this.starterList = starterList
                   this.interval = setInterval(function(){
@@ -147,7 +160,7 @@ const liveUpdate = function(target,url){
           }
       }
       catch (err){
-          console.log(`liveUpdate || ${err.name}, ${err.message}`)
+          console.error(`liveUpdate || ${err.name}, ${err.message}`)
       }   
   }
   
@@ -159,7 +172,7 @@ const liveUpdate = function(target,url){
           try{
               throw new liveUpdateError("Thread not started.")
           }catch(err){
-              console.log(`liveUpdate || ${err.name}, ${err.message}`)
+              console.error(`liveUpdate || ${err.name}, ${err.message}`)
           }
       }
   }
