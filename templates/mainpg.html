@@ -1,0 +1,24 @@
+<table>
+  <tr>
+      <td><p id = 'target'>The current time is demonsajs</p></td>
+      <td><p id = 'target2'>The thing is: asdf</p></td>
+  </tr>
+  
+  
+  <button id = 'test'>Stop Requests</button>
+</table>
+
+
+<script src="/static/liveUpdate"></script>
+<script>
+  var lh = new liveUpdate('target','/be')
+  lh.addReplacer('demonsajs')
+  lh.start()
+  var le = new liveUpdate('target2','/be2')
+  le.addReplacer('asdf')
+  le.start()
+  document.getElementById('test').addEventListener('click',function(){
+      lh.end()
+      le.end()
+  })
+</script>
