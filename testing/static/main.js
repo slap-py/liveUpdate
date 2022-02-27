@@ -92,6 +92,7 @@ const liveUpdate = function(target,url){
   this.replacer = 0
   this.interval = 0
   this.intervalMs = 500
+  this.path = []
 
   this.addReplacer = function(text){
       this.replacer = text
@@ -144,6 +145,7 @@ const liveUpdate = function(target,url){
       }
   }
   this.start = function(){
+    path = this.path
       try{
           
           text=this.replacer
@@ -175,10 +177,23 @@ const liveUpdate = function(target,url){
                   var starterList = document.getElementById(target).innerText.split(' ')
                   this.starterList = starterList
                   this.interval = setInterval(function(){
+                    
                       data = httpGet(url,true)
                       tgt = starterList
+                      d2 = JSON.parse(data)
+                      if(path != []){
+                        for(i=0;i<path.length;i++){
+                          console.log([d2,path[i]])
+                          d2 = d2[path[i]]
+                        }
+                        tgt[idxo] = d2
+                      }else{
+                        tgt[idxo] = data
+                      }
                       
-                      tgt[idxo] = data
+                      
+                      var data = JSON.parse(data)
+                      var d2 = data
                       document.getElementById(target).innerText =tgt.join(' ')
                   },this.intervalMs)
               }
@@ -217,5 +232,25 @@ const liveUpdate = function(target,url){
           this.intervalMs = ms
           this.start()
       }
+  }
+  this.setDatapath = function(path){
+    if(typeof(path) == typeof(['a'])){
+      try{
+        var data = httpGet(url,true)
+        var data = JSON.parse(data)
+        var d2 = data
+        
+        for(i=0;i<path.length;i++){
+          d2 = d2[path[i]]
+        }
+        if(d2 == undefined){
+          // datapoint does not exist
+        }else{
+          this.path = path
+        }
+      }catch{
+        //data is not json
+      }
+    }
   }
 }

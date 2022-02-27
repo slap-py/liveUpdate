@@ -12,7 +12,7 @@ def main():
 @app.route('/be')
 def backend():
     print(request.headers.get('test-header'))
-    return str(int(time.time()))
+    return {"H":[str(int(time.time()))]}
 @app.route('/be2')
 def backend2():
     return str(time.asctime(time.localtime(time.time())))
