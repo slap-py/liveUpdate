@@ -18,15 +18,14 @@ class liveUpdateError extends Error{
 }
 
 const request = function(url,method,hdrs){
+  this.errors = []
   method = method.toUpperCase()
-  var request = new XMLHttpRequest()
-  
-  if(method == "POST"){ 
-      request.open("POST",url,false)
-  }else if (method == "GET"){
-      request.open("GET",url,false)
+  try{
+    var request = new XMLHttpRequest()
+  if(['POST','GET','HEAD','PUT','DELETE','CONNECT','OPTIONS'].includes(method)){
+    request.open(method,url,false)
   }else{
-      request.open("GET",url,false)
+    this.errors.push("Request method not valid.")
   }
   for(i=0;i<hdrs.length;i++){
     try{
@@ -36,7 +35,6 @@ const request = function(url,method,hdrs){
       try{
         throw new liveUpdateError(`Invalid header, "${header}"`)
     } catch(error){
-        console.error(`liveUpdate || ${err.name}, ${err.message}`)
     }
     }
     
@@ -72,6 +70,7 @@ const request = function(url,method,hdrs){
       }
       
   }
+  this.json = json
   for(i=0;i<hdrs.length;i++){
     header = hdrs[i]
     dict = {}
@@ -83,6 +82,9 @@ const request = function(url,method,hdrs){
   this.getHeader = function(headerName){
     return this.headers[headerName]
   }
+  }catch{
+  }
+  
 }
 const liveUpdate = function(target,url){
   this.url = url || 0
