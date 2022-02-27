@@ -17,12 +17,20 @@ class liveUpdateError extends Error{
   }
 }
 
-const request = function(url,method,headers){
+const request = function(url,method,hdrs){
   method = method.toUpperCase()
   var request = new XMLHttpRequest()
-  for(i=0;i<headers.length;i++){
+  
+  if(method == "POST"){ 
+      request.open("POST",url,false)
+  }else if (method == "GET"){
+      request.open("GET",url,false)
+  }else{
+      request.open("GET",url,false)
+  }
+  for(i=0;i<hdrs.length;i++){
     try{
-      header = headers[i]
+      header = hdrs[i]
       request.setRequestHeader(header[0],header[1])
     } catch(err){
       try{
@@ -32,11 +40,6 @@ const request = function(url,method,headers){
     }
     }
     
-  }
-  if(method == "POST"){ 
-      request.open("POST",url,false)
-  }else if (method == "GET"){
-      request.open("GET",url,false)
   }
   
   request.send(null)
@@ -58,6 +61,12 @@ const request = function(url,method,headers){
           headers2.push(dict)
       }
       
+  }
+  for(i=0;i<hdrs.length;i++){
+    header = hdrs[i]
+    dict = {}
+    dict[header[0]] = header[1]
+    headers2.push(dict)
   }
   this.headers = headers2
 }

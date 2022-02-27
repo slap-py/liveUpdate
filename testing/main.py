@@ -11,11 +11,13 @@ def main():
 
 @app.route('/be')
 def backend():
+    print(request.headers.get('test-header'))
     return str(int(time.time()))
 @app.route('/be2')
 def backend2():
     return str(time.asctime(time.localtime(time.time())))
 @app.route('/static/liveUpdate')
 def serveStatic():
-    return flask.send_from_directory('static','main.js')
+    #return flask.send_from_directory('static','main.js')
+    return "console.log('hi')"
 app.run(port="80")
