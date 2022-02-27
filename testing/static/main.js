@@ -180,20 +180,21 @@ const liveUpdate = function(target,url){
                     
                       data = httpGet(url,true)
                       tgt = starterList
-                      d2 = JSON.parse(data)
-                      if(path != []){
-                        for(i=0;i<path.length;i++){
-                          console.log([d2,path[i]])
-                          d2 = d2[path[i]]
+                      try{
+                        d2 = JSON.parse(data)
+                        if(path != []){
+                          for(i=0;i<path.length;i++){
+                            d2 = d2[path[i]]
+                          }
+                          tgt[idxo] = d2
                         }
-                        tgt[idxo] = d2
-                      }else{
+                      }catch{
                         tgt[idxo] = data
                       }
                       
+                        
                       
-                      var data = JSON.parse(data)
-                      var d2 = data
+                      
                       document.getElementById(target).innerText =tgt.join(' ')
                   },this.intervalMs)
               }
