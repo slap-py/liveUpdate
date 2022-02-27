@@ -43,9 +43,19 @@ const request = function(url,method,hdrs){
   }
   
   request.send(null)
+  this.request = request
   this.response = request.responseText
-  this.json = request.responseXML
+  this.xml = request.responseXML
   this.url = request.responseURL
+  this.status = request.status
+  this.status_text = request.statusText
+  var json = null
+  try{
+    json = JSON.parse(request.responseText)
+  }catch{
+
+  }
+
   var headers = request.getAllResponseHeaders()
   headers = headers.split('\r\n')
   var headers2 = []
@@ -69,6 +79,10 @@ const request = function(url,method,hdrs){
     headers2.push(dict)
   }
   this.headers = headers2
+
+  this.getHeader = function(headerName){
+    return this.headers[headerName]
+  }
 }
 const liveUpdate = function(target,url){
   this.url = url || 0
